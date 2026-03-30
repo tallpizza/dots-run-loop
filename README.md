@@ -41,6 +41,7 @@ If the user has not specified the app/runtime yet, initialize only the loop file
 - `runs/run_XXX/manifest.json` is the only run-specific state file.
 - There is no separate global manifest file.
 - Dots remains the source of truth for long-lived requirements.
+- `intent` inside each manifest is flexible and does not need a strict nested schema.
 
 ## Install
 

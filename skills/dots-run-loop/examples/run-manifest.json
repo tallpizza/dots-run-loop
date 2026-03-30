@@ -2,9 +2,6 @@
   "schema_version": 1,
   "run": {
     "run_id": "run_001",
-    "sequence": 1,
-    "created_at": "2026-03-30T10:00:00Z",
-    "updated_at": "2026-03-30T10:00:00Z",
     "status": "generated",
     "based_on_run_id": null
   },
@@ -15,60 +12,25 @@
     }
   },
   "intent": {
-    "goal": "커머스 관리 화면 초기 구현",
-    "screens": [
-      {
-        "screen_id": "orders_list",
-        "title": "Orders List",
-        "requirements": [
-          "주문 목록 표시",
-          "상태 필터 제공",
-          "모바일 대응"
-        ]
-      }
+    "summary": "커머스 관리 화면 초기 구현",
+    "screens": ["orders_list"],
+    "notes": [
+      "주문 목록 표시",
+      "상태 필터 제공",
+      "모바일 대응",
+      "프레임워크 미정이면 loop 파일만 생성"
     ],
-    "constraints": [
-      "프레임워크 미정일 경우 loop 파일만 만든다"
-    ],
-    "acceptance": [
-      "run_001 manifest와 screenshots 폴더가 생성되어 있어야 함"
-    ],
-    "out_of_scope": [
-      "사용자가 지정하지 않은 프레임워크 scaffold 생성"
-    ]
+    "acceptance": ["run_001 manifest와 screenshots 폴더가 생성되어 있어야 함"],
+    "out_of_scope": ["사용자가 지정하지 않은 프레임워크 scaffold 생성"]
   },
-  "execution_prompt": {
-    "title": "Initialize first Dots loop run",
-    "prompt": "Dots에서 정리된 intent를 바탕으로 첫 run을 초기화하라. 사용자가 프레임워크를 명시하지 않으면 runs/index.json, run_001/manifest.json, run_001/screenshots/만 만들고 구현은 시작하지 마라. 사용자가 구현까지 원하면 intent.goal, screens, constraints, acceptance, out_of_scope만 사용해서 첫 실행 프롬프트를 구성하라.",
-    "inputs": [
-      "intent.goal",
-      "intent.screens",
-      "intent.constraints",
-      "intent.acceptance",
-      "intent.out_of_scope"
-    ]
-  },
+  "execution_prompt": "Dots에서 정리된 intent를 바탕으로 첫 run을 초기화하라. 사용자가 프레임워크를 명시하지 않으면 runs/index.json, run_001/manifest.json, run_001/screenshots/만 만들고 구현은 시작하지 마라. 사용자가 구현까지 원하면 intent 내용을 바탕으로 첫 실행 프롬프트를 구성하라.",
   "result": {
     "summary": [],
-    "routes": [],
-    "dev_server_url": null,
-    "checks": {
-      "build": "unknown",
-      "typecheck": "unknown",
-      "lint": "unknown"
-    },
     "screenshots": []
   },
   "review": {
-    "user_feedback": [],
+    "feedback": [],
     "drift": [],
-    "decision": {
-      "accepted": false,
-      "reason": ""
-    },
-    "next_run": {
-      "instructions": [],
-      "manifest_additions": []
-    }
+    "next_run": []
   }
 }
