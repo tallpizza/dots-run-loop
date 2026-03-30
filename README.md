@@ -20,3 +20,11 @@ runs/
 - screenshots are saved in `screenshots/`
 
 See `SKILL.md` and `examples/` for the operating pattern and example files.
+
+## Install
+
+```bash
+npx skills add tallpizza/dots-run-loop
+```
+
+For best compatibility, the skill is available at `skills/dots-run-loop/SKILL.md` and also mirrored at the repository root.
