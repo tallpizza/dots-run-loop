@@ -5,12 +5,6 @@
     "status": "generated",
     "based_on_run_id": null
   },
-  "source": {
-    "dots": {
-      "workspace_slug": "shared",
-      "space_slug": "commerce"
-    }
-  },
   "intent": {
     "summary": "커머스 관리 화면 초기 구현",
     "screens": ["orders_list"],

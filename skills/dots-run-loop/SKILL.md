@@ -7,6 +7,8 @@ description: Minimal run-based workflow for Dots implementation, screenshot revi
 
 Use this skill when the user wants to run an implementation-review-revision loop backed by Dots and local `runs/` folders.
 
+Assume the project root already contains `dots.json`. Do not duplicate Dots connection info inside each run manifest.
+
 ## Purpose
 
 This skill defines a minimal run-based workflow:
@@ -110,7 +112,6 @@ If the user asks for implementation after setup, use `execution_prompt` to recor
 Keep these top-level keys:
 
 - `run`
-- `source`
 - `intent`
 - `execution_prompt`
 - `result`
