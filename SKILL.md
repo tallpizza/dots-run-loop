@@ -51,14 +51,69 @@ project/
 ## Workflow
 
 1. Read Dots and summarize the current intent.
-2. Create a new `run_XXX/` folder.
-3. Write `manifest.json` for that run using the examples in this skill.
-4. Include an `execution_prompt` field inside `manifest.json`.
-5. Implement inside that run folder.
-6. Save screenshots under `screenshots/` and record them in `manifest.json.result.screenshots`.
-7. When the user reports drift, append the raw feedback and summarize it into `review.drift`.
-8. Convert the review into `review.next_run` instructions.
-9. Create the next run from the prior run plus the new instructions.
+2. If this is the first run, ask the user the minimum setup questions listed below.
+3. Create a new `run_XXX/` folder.
+4. Write `manifest.json` for that run using the examples in this skill.
+5. Include an `execution_prompt` field inside `manifest.json`.
+6. Implement inside that run folder.
+7. Save screenshots under `screenshots/` and record them in `manifest.json.result.screenshots`.
+8. When the user reports drift, append the raw feedback and summarize it into `review.drift`.
+9. Convert the review into `review.next_run` instructions.
+10. Create the next run from the prior run plus the new instructions.
+
+## Initial Setup
+
+When the user says something like `dots loop 초기세팅 해줘`, do not jump straight to implementation. First create the minimal run structure and gather the missing setup inputs.
+
+Create these files and folders first:
+
+```text
+runs/
+  index.json
+  run_001/
+    manifest.json
+    screenshots/
+```
+
+For the first run, `run_001/manifest.json` must start from an empty review state:
+
+- `run.based_on_run_id = null`
+- `review.user_feedback = []`
+- `review.drift = []`
+- `review.decision.accepted = false`
+- `review.decision.reason = ""`
+- `review.next_run.instructions = []`
+- `review.next_run.manifest_additions = []`
+
+If the project folder is otherwise empty, ask the user the minimum questions needed to seed the first run:
+
+1. What app/runtime should the run workspace use?
+   Examples: `Next.js`, `React + Vite`, `static HTML`, `unknown`
+2. Should the first run only create the run loop files, or also scaffold the app?
+   Examples: `loop only`, `scaffold app too`
+3. Which screens from Dots should be included in `run_001`?
+   Examples: `all`, `home + orders`, `orders only`
+4. What is the main goal sentence for this first run?
+5. Are there any hard constraints missing from Dots that must be inserted into `intent.constraints` now?
+
+If the user does not specify app/runtime, keep the run workspace minimal and only create the loop files. Do not invent a framework.
+
+If the user asks for implementation after setup, use `execution_prompt` to record the exact generation instruction.
+
+## Execution Prompt Rules
+
+For `run_001`, the `execution_prompt.inputs` should only reference the current intent:
+
+- `intent.goal`
+- `intent.screens`
+- `intent.constraints`
+- `intent.acceptance`
+- `intent.out_of_scope`
+
+For `run_002+`, you may additionally include:
+
+- `review.next_run.instructions`
+- `review.next_run.manifest_additions`
 
 ## Rules
 
@@ -104,6 +159,7 @@ orders-list-mobile-filter-open.png
 ## Example Files
 
 - `examples/runs-index.json`
+- `examples/run-001-manifest.json`
 - `examples/run-manifest.json`
 
 Use these as templates when initializing a new project or a new run.

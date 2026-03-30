@@ -21,6 +21,20 @@ runs/
 
 See `SKILL.md` and `examples/` for the operating pattern and example files.
 
+## First Run
+
+For first-time setup, the expected minimum output is:
+
+```text
+runs/
+  index.json
+  run_001/
+    manifest.json
+    screenshots/
+```
+
+If the user has not specified the app/runtime yet, initialize only the loop files and ask follow-up questions before scaffolding an app.
+
 ## Install
 
 ```bash
