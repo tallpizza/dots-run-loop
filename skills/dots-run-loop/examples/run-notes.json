@@ -1,0 +1,16 @@
+{
+  "run_id": "run_002",
+  "execution_prompt": "Dots의 최신 상태를 기준으로 orders 화면을 다시 구현하라. 모바일 필터는 접힘 UI로 만들고 상태 뱃지는 더 차분한 운영툴 톤으로 조정하라.",
+  "feedback": [
+    "모바일에서 필터가 너무 커서 리스트가 잘 안 보여",
+    "상태 뱃지가 너무 장난감 같음"
+  ],
+  "applied_changes": [
+    "모바일 필터를 접힘 패널로 변경",
+    "상태 뱃지 색과 대비를 낮춤"
+  ],
+  "screenshots": [
+    "screenshots/orders-list-desktop-default.png",
+    "screenshots/orders-list-mobile-default.png"
+  ]
+}

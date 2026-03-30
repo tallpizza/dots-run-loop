@@ -7,35 +7,26 @@ description: Minimal run-based workflow for Dots implementation, screenshot revi
 
 Use this skill when the user wants to run an implementation-review-revision loop backed by Dots and local `runs/` folders.
 
-Assume the project root already contains `dots.json`. Do not duplicate Dots connection info inside each run manifest.
+Assume the project root already contains `dots.json`.
 
 ## Purpose
 
-This skill defines a minimal run-based workflow:
+This skill defines a minimal run-based workflow where Dots is the single source of truth for the current desired state.
 
-- `runs/index.json` tracks the run chain
-- each `runs/run_XXX/` folder is a standalone app workspace
-- each run keeps a single `manifest.json`
+- Dots stores the latest desired state only
+- local `runs/run_XXX/` folders store generated artifacts only
 - screenshots live in `runs/run_XXX/screenshots/`
+- optional local notes can be stored in `runs/run_XXX/notes.json`
 
-There is no global manifest file. Use this split instead:
+There is no local manifest file that competes with Dots. Use this split instead:
 
-- `runs/index.json`: global run index only
-- `runs/run_XXX/manifest.json`: per-run snapshot and state
-- Dots: source of truth for long-lived product intent
+- Dots: source of truth for the current product intent
+- `runs/run_XXX/`: local implementation output for one attempt
+- `runs/run_XXX/notes.json`: optional local record of prompt, feedback, and applied changes
 
-The `manifest.json` file is the source of truth for that run. It includes:
+The agent should normalize whatever is currently in Dots into a working `intent` in memory. Do not require a fixed Dots node or edge model.
 
-- run metadata
-- Dots-derived intent
-- execution prompt
-- implementation result summary
-- screenshot references
-- user feedback
-- structured drift
-- next run instructions
-
-Keep the top-level shape stable, but let `intent` be flexible. `intent` does not need a rigid nested schema as long as it contains the content needed for that run.
+If the user wants history, keep it locally in the run folder. Do not treat local files as the source of truth.
 
 ## Folder Layout
 
@@ -43,16 +34,15 @@ Keep the top-level shape stable, but let `intent` be flexible. `intent` does not
 project/
   dots.json
   runs/
-    index.json
     run_001/
-      manifest.json
       screenshots/
+      notes.json
       package.json
       src/
       ...
     run_002/
-      manifest.json
       screenshots/
+      notes.json
       package.json
       src/
       ...
@@ -63,13 +53,11 @@ project/
 1. Read Dots and summarize the current intent.
 2. If this is the first run, ask the user the minimum setup questions listed below.
 3. Create a new `run_XXX/` folder.
-4. Write `manifest.json` for that run using the example in this skill.
-5. Include an `execution_prompt` string inside `manifest.json`.
-6. Implement inside that run folder.
-7. Save screenshots under `screenshots/` and record them in `manifest.json.result.screenshots`.
-8. When the user reports drift, append the raw feedback and summarize it into `review.drift`.
-9. Convert the review into `review.next_run` instructions.
-10. Create the next run from the prior run plus the new instructions.
+4. Build or regenerate inside that run folder from the current Dots state.
+5. Save screenshots under `screenshots/`.
+6. If useful, write a small `notes.json` with the execution prompt, user feedback, and applied changes.
+7. When the user reports drift, update Dots so it reflects the new latest desired state.
+8. Start the next run from the updated Dots state, not from an old local manifest.
 
 ## Initial Setup
 
@@ -79,18 +67,9 @@ Create these files and folders first:
 
 ```text
 runs/
-  index.json
   run_001/
-    manifest.json
     screenshots/
 ```
-
-For the first run, `run_001/manifest.json` must start from an empty review state:
-
-- `run.based_on_run_id = null`
-- `review.feedback = []`
-- `review.drift = []`
-- `review.next_run = []`
 
 If the project folder is otherwise empty, ask the user the minimum questions needed to seed the first run:
 
@@ -101,41 +80,33 @@ If the project folder is otherwise empty, ask the user the minimum questions nee
 3. Which screens from Dots should be included in `run_001`?
    Examples: `all`, `home + orders`, `orders only`
 4. What is the main goal sentence for this first run?
-5. Are there any hard constraints or notes missing from Dots that must be inserted into `intent` now?
+5. Are there any hard constraints or notes missing from Dots that should be added now?
 
 If the user does not specify app/runtime, keep the run workspace minimal and only create the loop files. Do not invent a framework.
 
-If the user asks for implementation after setup, use `execution_prompt` to record the exact generation instruction.
+If the user asks for implementation after setup, keep the exact generation instruction in local notes if needed.
 
-## Manifest Shape
+## Local Notes Shape
 
-Keep these top-level keys:
+`notes.json` is optional. If you create it, keep it small and local-only.
 
-- `run`
-- `intent`
+Recommended fields:
+
+- `run_id`
 - `execution_prompt`
-- `result`
-- `review`
-
-Inside `intent`, allow flexible content. The exact nested keys can vary per project and per run.
-
-Recommended minimums:
-
-- something that describes the goal
-- something that lists target screens or areas
-- any important notes, constraints, or out-of-scope points
+- `feedback`
+- `applied_changes`
+- `screenshots`
 
 ## Rules
 
-- Keep only one run index file: `runs/index.json`.
-- Keep only one run state file per run: `runs/run_XXX/manifest.json`.
-- Do not split review or drift into separate JSON files.
+- Dots is the only source of truth for the latest desired state.
+- Do not create a local manifest that duplicates Dots state.
+- Do not require a fixed Dots node or edge model.
 - Keep screenshots in a dedicated `screenshots/` folder only.
-- Treat `intent` as the normalized view of Dots for this run.
-- Do not force a rigid nested schema inside `intent`.
-- Treat `execution_prompt` as the exact prompt used for generation.
-- Preserve user feedback text in `review.feedback`.
-- Keep drift concise and implementation-oriented.
+- If drift is reported, update Dots first.
+- Use local notes only for optional history or debugging.
+- Keep local notes concise and implementation-oriented.
 
 ## Suggested File Naming
 
@@ -169,7 +140,6 @@ orders-list-mobile-filter-open.png
 
 ## Example Files
 
-- `skills/dots-run-loop/examples/runs-index.json`
-- `skills/dots-run-loop/examples/run-manifest.json`
+- `skills/dots-run-loop/examples/run-notes.json`
 
-Use `run-manifest.json` as the default template for `run_001`. For later runs, keep the same top-level shape and fill `review` and `result` as the loop progresses.
+Use `run-notes.json` only when local history is useful. Otherwise the run folder can contain just app files and screenshots.

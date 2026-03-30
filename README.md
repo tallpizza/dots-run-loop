@@ -6,18 +6,17 @@ Minimal run-based workflow for implementing from Dots, reviewing screenshots, re
 
 ```text
 runs/
-  index.json
   run_001/
-    manifest.json
     screenshots/
+    notes.json
 ```
 
 ## Core idea
 
-- `runs/index.json` tracks the run chain
+- Dots holds the latest desired state
 - each `run_XXX/` folder is a standalone app workspace
-- each run stores all run state in `manifest.json`
 - screenshots are saved in `screenshots/`
+- optional local notes can be saved in `notes.json`
 
 See `skills/dots-run-loop/SKILL.md` and `skills/dots-run-loop/examples/` for the operating pattern and example files.
 
@@ -27,9 +26,7 @@ For first-time setup, the expected minimum output is:
 
 ```text
 runs/
-  index.json
   run_001/
-    manifest.json
     screenshots/
 ```
 
@@ -38,11 +35,10 @@ If the user has not specified the app/runtime yet, initialize only the loop file
 ## State Model
 
 - project root `dots.json` is assumed to exist.
-- `runs/index.json` is the only global file.
-- `runs/run_XXX/manifest.json` is the only run-specific state file.
-- There is no separate global manifest file.
-- Dots remains the source of truth for long-lived requirements.
-- `intent` inside each manifest is flexible and does not need a strict nested schema.
+- Dots is the only source of truth for the latest desired state.
+- `runs/run_XXX/` stores local artifacts only.
+- `runs/run_XXX/notes.json` is optional and local-only.
+- There is no local manifest or index file.
 
 ## Install
 
