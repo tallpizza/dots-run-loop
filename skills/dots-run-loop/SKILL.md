@@ -16,6 +16,12 @@ This skill defines a minimal run-based workflow:
 - each run keeps a single `manifest.json`
 - screenshots live in `runs/run_XXX/screenshots/`
 
+There is no global manifest file. Use this split instead:
+
+- `runs/index.json`: global run index only
+- `runs/run_XXX/manifest.json`: per-run snapshot and state
+- Dots: source of truth for long-lived product intent
+
 The `manifest.json` file is the source of truth for that run. It includes:
 
 - run metadata
@@ -53,7 +59,7 @@ project/
 1. Read Dots and summarize the current intent.
 2. If this is the first run, ask the user the minimum setup questions listed below.
 3. Create a new `run_XXX/` folder.
-4. Write `manifest.json` for that run using the examples in this skill.
+4. Write `manifest.json` for that run using the example in this skill.
 5. Include an `execution_prompt` field inside `manifest.json`.
 6. Implement inside that run folder.
 7. Save screenshots under `screenshots/` and record them in `manifest.json.result.screenshots`.
@@ -158,8 +164,7 @@ orders-list-mobile-filter-open.png
 
 ## Example Files
 
-- `examples/runs-index.json`
-- `examples/run-001-manifest.json`
-- `examples/run-manifest.json`
+- `skills/dots-run-loop/examples/runs-index.json`
+- `skills/dots-run-loop/examples/run-manifest.json`
 
-Use these as templates when initializing a new project or a new run.
+Use `run-manifest.json` as the default template for `run_001`. For later runs, keep the same shape and fill `review` and `result` as the loop progresses.

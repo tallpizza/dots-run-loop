@@ -19,7 +19,7 @@ runs/
 - each run stores all run state in `manifest.json`
 - screenshots are saved in `screenshots/`
 
-See `SKILL.md` and `examples/` for the operating pattern and example files.
+See `skills/dots-run-loop/SKILL.md` and `skills/dots-run-loop/examples/` for the operating pattern and example files.
 
 ## First Run
 
@@ -35,10 +35,17 @@ runs/
 
 If the user has not specified the app/runtime yet, initialize only the loop files and ask follow-up questions before scaffolding an app.
 
+## State Model
+
+- `runs/index.json` is the only global file.
+- `runs/run_XXX/manifest.json` is the only run-specific state file.
+- There is no separate global manifest file.
+- Dots remains the source of truth for long-lived requirements.
+
 ## Install
 
 ```bash
 npx skills add tallpizza/dots-run-loop
 ```
 
-For best compatibility, the skill is available at `skills/dots-run-loop/SKILL.md` and also mirrored at the repository root.
+For best compatibility, the skill lives at `skills/dots-run-loop/SKILL.md`.
