@@ -17,6 +17,7 @@ runs/
 - each `run_XXX/` folder is a standalone app workspace
 - screenshots are saved in `screenshots/`
 - optional local notes can be saved in `notes.json`
+- implementation attempts should be run through `opencode` from Bash using an inline prompt built from Dots
 
 See `skills/dots-run-loop/SKILL.md` and `skills/dots-run-loop/examples/` for the operating pattern and example files.
 

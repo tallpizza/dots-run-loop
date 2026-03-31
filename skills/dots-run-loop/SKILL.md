@@ -37,6 +37,8 @@ The agent should normalize whatever is currently in Dots into a working `intent`
 
 If the user wants history, keep it locally in the run folder. Do not treat local files as the source of truth.
 
+When actually running an implementation attempt, do not use the current chat context as the generator. Always try to invoke `opencode` from Bash with an inline prompt built from the current Dots state.
+
 ## Folder Layout
 
 ```text
@@ -63,11 +65,13 @@ project/
 2. If this is the first run, ask the user the minimum setup questions listed below.
 3. Create a new `run_XXX/` folder.
 4. Build or regenerate inside that run folder from the current Dots state.
-5. Save screenshots under `screenshots/`.
-6. If useful, write a small `notes.json` with the execution prompt, user feedback, and applied changes.
-7. When the user reports drift, first interpret that drift as a problem in the current Dots state unless it is clearly just an implementation bug.
-8. Update Dots so it reflects the new latest desired state.
-9. Start the next run from the updated Dots state, not from an old local manifest.
+5. Always try to execute the implementation attempt by calling `opencode` from Bash with an inline prompt.
+6. Do not treat the current assistant message context as the implementation engine when this loop is running.
+7. Save screenshots under `screenshots/`.
+8. If useful, write a small `notes.json` with the execution prompt, user feedback, and applied changes.
+9. When the user reports drift, first interpret that drift as a problem in the current Dots state unless it is clearly just an implementation bug.
+10. Update Dots so it reflects the new latest desired state.
+11. Start the next run from the updated Dots state, not from an old local manifest.
 
 ## Drift Handling
 
@@ -118,6 +122,7 @@ Recommended fields:
 
 - `run_id`
 - `execution_prompt`
+- `opencode_command`
 - `feedback`
 - `applied_changes`
 - `screenshots`
@@ -128,6 +133,8 @@ Recommended fields:
 - The main purpose of the loop is to improve Dots, not just to produce one good run.
 - Do not create a local manifest that duplicates Dots state.
 - Do not require a fixed Dots node or edge model.
+- When running an implementation attempt, prefer `opencode` via Bash with an inline prompt assembled from Dots.
+- Do not use the current assistant conversation as the direct generation mechanism for run execution unless `opencode` is unavailable.
 - Keep screenshots in a dedicated `screenshots/` folder only.
 - If drift is reported, prefer updating Dots before rerunning.
 - Treat drift as a signal about missing or weak specification unless there is strong evidence of a pure implementation bug.
