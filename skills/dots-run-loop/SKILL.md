@@ -13,6 +13,15 @@ Assume the project root already contains `dots.json`.
 
 This skill defines a minimal run-based workflow where Dots is the single source of truth for the current desired state.
 
+The main goal of the loop is not just to generate code. The main goal is to refine and complete the current state in Dots so future runs produce better results with less drift.
+
+Treat each run as a probe against the current Dots state:
+
+- implementation output is a way to test how complete Dots is
+- drift is evidence that Dots is missing clarity, constraints, or priorities
+- the primary outcome of the loop is a better Dots state
+- generated files and screenshots are secondary artifacts
+
 - Dots stores the latest desired state only
 - local `runs/run_XXX/` folders store generated artifacts only
 - screenshots live in `runs/run_XXX/screenshots/`
@@ -56,8 +65,23 @@ project/
 4. Build or regenerate inside that run folder from the current Dots state.
 5. Save screenshots under `screenshots/`.
 6. If useful, write a small `notes.json` with the execution prompt, user feedback, and applied changes.
-7. When the user reports drift, update Dots so it reflects the new latest desired state.
-8. Start the next run from the updated Dots state, not from an old local manifest.
+7. When the user reports drift, first interpret that drift as a problem in the current Dots state unless it is clearly just an implementation bug.
+8. Update Dots so it reflects the new latest desired state.
+9. Start the next run from the updated Dots state, not from an old local manifest.
+
+## Drift Handling
+
+When drift appears, prefer asking: `what should change in Dots so the next run is better?`
+
+Before rerunning, classify the drift in one of these ways:
+
+- Dots was ambiguous
+- Dots missed an important constraint
+- Dots missed an out-of-scope boundary
+- Dots did not express the desired tone or priority clearly enough
+- the implementation failed even though Dots was already clear
+
+In most cases, improve Dots first, then rerun.
 
 ## Initial Setup
 
@@ -101,10 +125,12 @@ Recommended fields:
 ## Rules
 
 - Dots is the only source of truth for the latest desired state.
+- The main purpose of the loop is to improve Dots, not just to produce one good run.
 - Do not create a local manifest that duplicates Dots state.
 - Do not require a fixed Dots node or edge model.
 - Keep screenshots in a dedicated `screenshots/` folder only.
-- If drift is reported, update Dots first.
+- If drift is reported, prefer updating Dots before rerunning.
+- Treat drift as a signal about missing or weak specification unless there is strong evidence of a pure implementation bug.
 - Use local notes only for optional history or debugging.
 - Keep local notes concise and implementation-oriented.
 
